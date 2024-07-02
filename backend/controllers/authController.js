@@ -3,6 +3,23 @@ const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const sendEmail = require("../utils/email");
+const session = require("../config/neo4j");
+
+exports.createAuthor = async (id, authorName) => {
+	try {
+		const result = await session.run(
+			`CREATE(a:Author{
+				authorId: $id,
+				name: $authorName,
+				created_at: datetime(),
+				updated_at: datetime()
+			}) RETURN a`,
+			{ id, authorName }
+		);
+	} catch (err) {
+		console.error("Error creating author:", err);
+	}
+};
 
 exports.signToken = (id) => {
 	const accessToken = jwt.sign({ id: id }, process.env.JWT_SECRET, {
@@ -39,6 +56,11 @@ exports.signup = async (req, res) => {
 		token.refreshToken = exports.signRefreshToken(user._id);
 		exports.setCookie(res, "refreshToken", token.refreshToken);
 		exports.setCookie(res, "accessToken", token.accessToken);
+		exports.createAuthor(
+			user._id.toString(),
+			user.profile.first_name + " " + user.profile.last_name
+		);
+		console.log(user._id.toString());
 		res.status(201).json({
 			status: "success",
 			data: {

@@ -12,7 +12,7 @@ exports.getAllUsers = async (req, res) => {
 			},
 		});
 	} catch (err) {
-		console.log("****", err);
+		console.error("****", err);
 		res.status(400).json({
 			status: "fail",
 			message: "Unable to Fetch All Users",
@@ -41,7 +41,7 @@ exports.createNewUser = async (req, res) => {
 			},
 		});
 	} catch (err) {
-		console.log("****", err);
+		console.error("****", err);
 		res.status(500).json({
 			status: "fail",
 			message: "Unable to create User",
@@ -65,7 +65,7 @@ exports.getUser = async (req, res) => {
 			},
 		});
 	} catch (err) {
-		console.log("****", err);
+		console.error("****", err);
 		res.status(500).json({
 			status: "fail",
 			message: "Unable to Fetch User",
@@ -84,7 +84,7 @@ exports.updateUser = async (req, res) => {
 		}
 		res.status(200).json({ status: "success", data: { user } });
 	} catch (err) {
-		console.log("****", err);
+		console.error("****", err);
 		res.status(500).json({
 			status: "fail",
 			message: "Unable to Update User",
